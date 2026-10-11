@@ -1,0 +1,67 @@
+import sys
+
+# Ensure local directories are in search path across all modules
+for search_dir in ("lib", "./lib", "/lib", "settings", "./settings", "/settings", "services", "./services", "/services"):
+    if search_dir not in sys.path:
+        sys.path.append(search_dir)
+
+# Attempt to load credentials from external untracked secrets.py
+WIFI_SSID = None
+WIFI_PASSWORD = None
+WIFI_CONFIG_ERROR = None
+
+try:
+    import secrets
+
+    if hasattr(secrets, "WIFI_SSID") or hasattr(secrets, "WIFI_PASSWORD"):
+        WIFI_SSID = getattr(secrets, "WIFI_SSID", None)
+        WIFI_PASSWORD = getattr(secrets, "WIFI_PASSWORD", None)
+    else:
+        WIFI_CONFIG_ERROR = "No secrets.py"
+except ImportError:
+    WIFI_CONFIG_ERROR = "No secrets.py"
+
+# Validate credentials if secrets.py was found
+if WIFI_CONFIG_ERROR is None:
+    if not WIFI_SSID or not WIFI_PASSWORD:
+        WIFI_CONFIG_ERROR = "Empty SSID/Pwd"
+    elif WIFI_SSID == "YOUR_WIFI_SSID" or WIFI_PASSWORD == "YOUR_WIFI_PASSWORD":
+        WIFI_CONFIG_ERROR = "Default SSID/Pwd"
+
+
+def has_valid_credentials():
+    """Returns True if valid WiFi credentials are loaded."""
+    return WIFI_CONFIG_ERROR is None
+
+
+# Network & Hostname Configuration
+HOSTNAME = "miniweb"
+
+# WiFi Retry Interval
+WIFI_RETRY_INTERVAL_S = 10
+
+# Hardware Pin Mappings for Waveshare ESP32-S3-DEV-KIT-N16R8-M
+PIN_RGB_LED = 38        # GPIO 38 - Onboard WS2812 RGB LED (NeoPixel)
+
+
+# I2C & SSD1306 OLED Display Settings
+I2C_ID = 0
+I2C_FREQ = 400_000      # 400kHz
+OLED_WIDTH = 128
+OLED_HEIGHT = 64
+DISPLAY_WIDTH = OLED_WIDTH
+DISPLAY_HEIGHT = OLED_HEIGHT
+
+# Timing & Intervals (in seconds)
+SENSOR_READ_INTERVAL_S = 2.5       # DHT22 requires >= 2s between readings
+DISPLAY_REFRESH_INTERVAL_S = 1.0   # UI update interval
+PIR_WINDOW_S = 10                  # Motion sensor duty cycle rolling window (10 seconds)
+
+# HTTP & CoAP Server Configuration
+HTTP_PORT = 80
+COAP_PORT = 5683
+DEFAULT_DEVICE_ID = "esp32s3"
+DEFAULT_DEVICE_TYPE = "esp32s3"
+
+DEVICE_ID = getattr(secrets, "DEVICE_ID", DEFAULT_DEVICE_ID) if (WIFI_CONFIG_ERROR is None and 'secrets' in locals() and hasattr(secrets, "DEVICE_ID")) else DEFAULT_DEVICE_ID
+DEVICE_TYPE = getattr(secrets, "DEVICE_TYPE", DEFAULT_DEVICE_TYPE) if (WIFI_CONFIG_ERROR is None and 'secrets' in locals() and hasattr(secrets, "DEVICE_TYPE")) else DEFAULT_DEVICE_TYPE

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Embedded asynchronous web server running on Waveshare ESP32-S3-DEV-KIT-N16R8-M with Microdot">
+  <title>ESP32-S3 MiniWeb Dashboard</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="background-glow"></div>
+  
+  <div class="app-container">
+    <header class="app-header">
+      <div class="header-branding">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+            <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+            <line x1="6" y1="6" x2="6.01" y2="6"></line>
+            <line x1="6" y1="18" x2="6.01" y2="18"></line>
+          </svg>
+        </div>
+        <div>
+          <h1 class="header-title">ESP32-S3 MiniWeb</h1>
+          <p class="header-subtitle">Waveshare DEV-KIT-N16R8-M &bull; Microdot v2</p>
+        </div>
+      </div>
+
+      <div class="status-indicator">
+        <span class="status-dot" id="server-status-dot"></span>
+        <span class="status-label" id="server-status-text">Connecting...</span>
+      </div>
+    </header>
+
+    <main class="dashboard-grid">
+      <!-- Device Telemetry Card -->
+      <section class="card telemetry-card">
+        <div class="card-header">
+          <h2 class="card-title">Device Telemetry</h2>
+          <span class="badge" id="host-badge">miniweb.local</span>
+        </div>
+
+        <div class="telemetry-grid">
+          <div class="metric-item">
+            <span class="metric-label">IP Address</span>
+            <span class="metric-value" id="val-ip">--</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">Uptime</span>
+            <span class="metric-value" id="val-uptime">--</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">Free Heap</span>
+            <span class="metric-value" id="val-heap">--</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">Wi-Fi Signal</span>
+            <span class="metric-value" id="val-rssi">--</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Interaction & LED Activity Card -->
+      <section class="card action-card">
+        <div class="card-header">
+          <h2 class="card-title">Activity & LED Pulse</h2>
+          <span class="led-badge" id="led-indicator-pill">
+            <span class="led-dot"></span> RGB LED (GPIO 38)
+          </span>
+        </div>
+
+        <p class="card-description">
+          Each HTTP request received by this board triggers a non-blocking blue pulse on the onboard WS2812 RGB LED.
+        </p>
+
+        <div class="action-controls">
+          <button id="btn-ping" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+            Send Ping / Pulse LED
+          </button>
+          <span class="latency-display" id="latency-text">Latency: -- ms</span>
+        </div>
+
+        <div class="activity-log-container">
+          <div class="activity-log-header">
+            <span>Recent Requests</span>
+            <button id="btn-clear-log" class="btn-text">Clear</button>
+          </div>
+          <ul id="activity-log-list" class="activity-log-list">
+            <li class="log-item">Dashboard loaded. Initializing polling...</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <p>Powered by <strong>MicroPython</strong> + <strong>Microdot</strong> &bull; Async Event Loop</p>
+    </footer>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
