@@ -17,7 +17,8 @@ except ImportError:
     from settings import config
 
 # Color Definitions (R, G, B) - Using brightness of 32 (safe & visible)
-COLOR_GREEN = (0, 32, 0)
+COLOR_RED = (0, 32, 0)
+COLOR_GREEN = (32, 0, 0)
 COLOR_BLUE = (0, 0, 32)
 COLOR_OFF = (0, 0, 0)
 
